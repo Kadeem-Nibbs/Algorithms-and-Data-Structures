@@ -15,61 +15,49 @@ struct dl_node {
     struct dl_node *next;
 };
 
-struct node* initialize_linked_list(int length);
-struct node* initialize_dlinked_list(int length);
+struct node* linked_list(int value);
+struct node* dlinked_list(int length);
 void print_linked_list(struct node *head);
-int get_length(struct node *head);
+int length(struct node *head);
 void free_linked_list(struct node *head);
 int peek(struct node *head);
-struct node* pop(struct node *head);
-struct node* push(struct node *head, int value);
+struct node* pop(struct node *head, int* data);
+void push(struct node *head, int value);
 
 int main()
 {
     printf("First linked list...\n");
     struct node *head;
-    head = initialize_linked_list(20);
+    head = linked_list(20);
     print_linked_list(head);
     free_linked_list(head);
     printf("\n\nSecond linked list...\n");
     struct node *new_head;
-    new_head = malloc( sizeof(struct node) );
-    new_head->data = 0;
-    new_head->next = 0;
+    new_head = linked_list(0);
     int i;
     for (i = 1; i < 20; i++){
         push(new_head, i);
     }
     print_linked_list(new_head);
     printf("\n\nDeleting the head of the second linked list...\n");
-    new_head = pop(new_head);
+    int* data;
+    new_head = pop(new_head, data);
     print_linked_list(new_head);
     return 0;
 }
 
 /**
- * initialize_linked_list - Create linked list with random integer values
- * @length:     The length of the linked list to be created
+ * linked_list - Initialize single node linked list
+ * @value:     The value of the node created
  *
  * Returns a pointer to the first node of a newly created linked list
  */
-struct node* initialize_linked_list(int length)
+struct node* linked_list(int value)
 {
-    int i;
     struct node *head;
-    struct node *pointer;
-    head = malloc( sizeof(struct node) );
-    head->data = rand()%MAX_VALUE;
-    head->next = 0;
-    pointer = head;
-    srand( time(NULL) );
-    // Would a linked list defined this way be contiguous in memory?
-    for (i = 0; i < length - 1; i++){
-        pointer->next = malloc( sizeof(struct node) );
-        pointer = pointer->next;
-        pointer->data = rand()%MAX_VALUE;
-    }
-    pointer->next = 0;
+    head = malloc( sizeof(head) );
+    head->data = value;
+    head->next = NULL;
     return head;
 }
 
@@ -81,7 +69,7 @@ void print_linked_list(struct node *head)
 {
     struct node *pointer;
     pointer = head;
-    while (pointer != 0){
+    while (pointer != NULL){
         printf("%d\n", pointer->data);
         pointer = pointer->next;
     }
@@ -91,12 +79,12 @@ void print_linked_list(struct node *head)
  * get_length - Return length of linked list
  * @head:       pointer to head node of linked list
  */
-int get_length(struct node *head)
+int length(struct node *head)
 {
     struct node *pointer;
     pointer = head;
     int count = 0;
-    while (pointer != 0){
+    while (pointer != NULL){
         count++;
         pointer = pointer->next;
     }
@@ -111,7 +99,7 @@ void free_linked_list(struct node *head)
 {
     struct node *pointer, *tmp;
     pointer = head;
-    while (pointer != 0){
+    while (pointer != NULL){
         tmp = pointer;
         pointer = pointer->next;
         free( tmp );
@@ -121,28 +109,34 @@ void free_linked_list(struct node *head)
 /**
  * peek - return the value of the head node of a linked list
  * @head:       pointer to head node of linked list
+ *
+ * Return data if head is not null, print -1 and return error message otherwise
  */
 int peek(struct node *head)
 {
-    if (head != 0){
+    if (head != NULL){
         return head->data;
     }
+    printf('You done goofed');
     return -1;
 }
 
 /**
  * pop - Delete head node of linked list
  * @head:       pointer to head node of linked list
+ * @data:       points to location to store data at head of linked list in
  *
- * Return pointer to new head node.
+ * Return value new head node and store data from old head in int
  */
-struct node* pop(struct node *head)
+struct node* pop(struct node *head, int* data)
 {
     struct node *tmp;
-    if (head == 0){
-        return 0;
+    if (head == NULL){
+        return;
     }
     tmp = head;
+    // *data = tmp->data; // This line crashed the program, any ideas why?
+    printf("Got here");
     head = head->next;
     free( tmp );
     return head;
@@ -153,22 +147,24 @@ struct node* pop(struct node *head)
  * @head:       pointer to head node of linked list
  * @value:      value of node added to tail end of list
  *
- * Returns pointer to head node of linked list.
+ * Prints error message if input head is null
  */
-struct node* push(struct node *head, int value)
+void push(struct node *head, int value)
 {
-    if (head == 0){
-        return 0;
+    if (head == NULL){
+        head->data = value;
+        head->next = NULL;
+        printf("You done goofed");
+        return;
     }
     struct node *pointer, *tmp;
     tmp = pointer = head;
-    while (tmp != 0){
+    while (tmp != NULL){
         pointer = tmp;
         tmp = tmp->next;
     }
-    pointer->next = malloc( sizeof(struct node) );
+    pointer->next = malloc( sizeof(pointer) );
     pointer = pointer->next;
     pointer->data = value;
-    pointer->next = 0;
-    return head;
+    pointer->next = NULL;
 };
