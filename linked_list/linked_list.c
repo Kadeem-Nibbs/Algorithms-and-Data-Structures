@@ -1,8 +1,7 @@
+#include "linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-int MAX_VALUE = 100;
 
 struct node {
     int data;
@@ -15,34 +14,8 @@ struct dl_node {
     struct dl_node *next;
 };
 
-struct node* linked_list(int value);
-struct node* dlinked_list(int length);
-void print_linked_list(struct node *head);
-int length(struct node *head);
-void free_linked_list(struct node *head);
-int peek(struct node *head);
-struct node* pop(struct node *head, int* data);
-void push(struct node *head, int value);
-
 int main()
 {
-    printf("First linked list...\n");
-    struct node *head;
-    head = linked_list(20);
-    print_linked_list(head);
-    free_linked_list(head);
-    printf("\n\nSecond linked list...\n");
-    struct node *new_head;
-    new_head = linked_list(0);
-    int i;
-    for (i = 1; i < 20; i++){
-        push(new_head, i);
-    }
-    print_linked_list(new_head);
-    printf("\n\nDeleting the head of the second linked list...\n");
-    int* data;
-    new_head = pop(new_head, data);
-    print_linked_list(new_head);
     return 0;
 }
 
